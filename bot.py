@@ -1,6 +1,0 @@
-from dotenv import load_dotenv
-import discord
-
-import log
-
-load_dotenv()
