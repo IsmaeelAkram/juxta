@@ -1,4 +1,4 @@
-<h1><img src="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Wide%20Logo%20Dark%202x.png" alt="Juxta logo" width="250"/></h1>
+<h1><img src="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Wide%20Logo%20Dark%202x.png" alt="Juxta logo" width="300"/></h1>
 
 Juxta is a high-performance, easy-to-use Discord bot.
 
