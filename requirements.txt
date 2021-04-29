@@ -1,0 +1,7 @@
+discord.py[voice]
+asyncio
+aioredis
+requests
+pychalk
+flask
+python-dotenv
