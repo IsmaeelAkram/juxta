@@ -9,6 +9,8 @@ Juxta is a high-performance, easy-to-use Discord bot.
 - Music
 - Levels/XP
 - Money (maybe)
+- Streamer Role (when people go live)
+- Streamer Announcements
 
 ## Juxta uses:
 - discord.py
