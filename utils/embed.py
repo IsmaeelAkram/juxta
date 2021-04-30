@@ -20,4 +20,9 @@ def Embed(
 
 
 def SoftErrorEmbed(error):
-    return discord.Embed(title="Oops!", description=error, color=0xD13F3F)
+    return discord.Embed(
+        title="",
+        description=error,
+        color=0xD13F3F,
+        timestamp=datetime.datetime.utcnow(),
+    )
