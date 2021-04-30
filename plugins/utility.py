@@ -57,6 +57,8 @@ class Utility(Plugin):
         help_embed = embed.Embed(
             title="Juxta Help",
             description="Juxta is a high-performance, easy-to-use Discord bot with an abundance of features. This help prompt is meant to be a guide on the commands Juxta has to offer, and how to use them.",
+        ).set_thumbnail(
+            url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
         )
         await message.channel.send(embed=help_embed)
 
@@ -67,11 +69,13 @@ class Utility(Plugin):
                     usage = ""
                 else:
                     usage = " " + command.usage
-                plugin_commands += (
-                    f"`{bot.PREFIX}{command.name}{usage}` — **{command.description}**\n"
-                )
+                plugin_commands += f"`{bot.PREFIX}{command.name}{usage}`\n**{command.description}**\n\n"
             await message.channel.send(
-                embed=embed.Embed(title=plugin.name, description=plugin_commands)
+                embed=embed.Embed(
+                    title=plugin.name, description=plugin_commands
+                ).set_thumbnail(
+                    url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
+                )
             )
 
     async def commands(self, bot, args: list[str], message: discord.Message):
