@@ -4,6 +4,7 @@ from utils import embed
 import discord
 import asyncio
 import log
+import exceptions
 
 
 class Music(Plugin):
@@ -50,24 +51,58 @@ class Music(Plugin):
             ),
         ]
 
-    async def summon(self, args: list[str], message: discord.Message):
-        voice_channel = message.author.voice.channel
-        await voice_channel.connect()
-        await message.guild.change_voice_state(channel=voice_channel, self_deaf=True)
-        await message.add_reaction("👌")
+    async def summon(self, args: list[str], message: discord.Message, is_cmd=True):
+        user_voice = message.author.voice
+        if user_voice == None:
+            raise exceptions.NoVoiceChannelError
+            return
+        if message.guild.voice_client != None:
+            if user_voice.channel.id != message.guild.voice_client.channel.id:
+                await self.leave(args, message, is_cmd=False)
+                await user_voice.channel.connect()
+                await message.guild.change_voice_state(
+                    channel=user_voice.channel, self_deaf=True
+                )
+            else:
+                raise exceptions.AlreadyInVoiceChannelError
+        else:
+            await user_voice.channel.connect()
+            await message.guild.change_voice_state(
+                channel=user_voice.channel, self_deaf=True
+            )
+        if is_cmd:
+            await message.add_reaction("👌")
 
-    async def leave(self, args: list[str], message: discord.Message):
+    async def leave(self, args: list[str], message: discord.Message, is_cmd=True):
+        if message.guild.voice_client == None:
+            raise exceptions.BotNotInVoiceChannelError
+            return
         await message.guild.voice_client.disconnect()
-        await message.add_reaction("👌")
+        if is_cmd:
+            await message.add_reaction("👌")
 
     async def airhorn(self, args: list[str], message: discord.Message):
         isQuick = False
-        try:
-            voice_channel = message.author.voice.channel
-            await voice_channel.connect()
+
+        user_voice = message.author.voice
+        if user_voice == None:
+            raise exceptions.NoVoiceChannelError
+            return
+        if message.guild.voice_client != None:
+            if user_voice.channel.id != message.guild.voice_client.channel.id:
+                isQuick = True
+                await self.leave(args, message, is_cmd=False)
+                await user_voice.channel.connect()
+                await message.guild.change_voice_state(
+                    channel=user_voice.channel, self_deaf=True
+                )
+        else:
             isQuick = True
-        except:
-            pass
+            await user_voice.channel.connect()
+            await message.guild.change_voice_state(
+                channel=user_voice.channel, self_deaf=True
+            )
+
         source = discord.PCMVolumeTransformer(
             discord.FFmpegPCMAudio("data/airhorn_default.ogg")
         )
