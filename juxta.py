@@ -1,5 +1,6 @@
 from plugins import utility, moderation, music
 from utils import embed
+from discord_sentry_reporting import use_sentry
 import plugin
 import discord
 import asyncio
@@ -7,6 +8,7 @@ import aioredis
 import os
 import log
 import signal
+import exceptions
 
 
 class Juxta(discord.Client):
@@ -29,9 +31,11 @@ class Juxta(discord.Client):
     async def on_ready(self):
         self.REDIS_URL = os.getenv("REDIS_URL")
         self.PREFIX = os.getenv("PREFIX")
+        self.SENTRY_URL = os.getenv("SENTRY_URL")
 
         self.plugins = []
 
+        use_sentry(self, dsn=self.SENTRY_URL)
         await self.open_db()
         self.register_plugins()
         discord.opus.load_opus(os.getenv("OPUS_PATH"))
@@ -71,24 +75,41 @@ class Juxta(discord.Client):
         self.redis.incr("juxta:command_count")
 
         try:
-            await command.handler(self, args, message)
+            await command.handler(args, message)
         except PermissionError as e:
             log.warning(e)
             await message.channel.send(
+                message.author.mention,
                 embed=embed.SoftErrorEmbed(
                     f"You don't have permission to run `{self.PREFIX}{command.name}`!"
-                )
+                ),
             )
-        except TypeError as e:
+        except exceptions.ArgsError as e:
             log.warning(e)
             if command.usage == "":
                 command_usage = command.usage
             else:
                 command_usage = " " + command.usage
             await message.channel.send(
+                message.author.mention,
                 embed=embed.SoftErrorEmbed(
                     f"You're missing arguments!\nUsage: `{self.PREFIX}{command.name}{command_usage}`"
-                )
+                ),
+            )
+        except exceptions.NoVoiceChannelError as e:
+            await message.channel.send(
+                message.author.mention,
+                embed=embed.SoftErrorEmbed(f"You're not in a voice channel!"),
+            )
+        except exceptions.AlreadyInVoiceChannelError as e:
+            await message.channel.send(
+                message.author.mention,
+                embed=embed.SoftErrorEmbed(f"I'm already in your voice channel!"),
+            )
+        except exceptions.BotNotInVoiceChannelError as e:
+            await message.channel.send(
+                message.author.mention,
+                embed=embed.SoftErrorEmbed(f"I'm not in a voice channel!"),
             )
         for plugin in self.plugins:
             await plugin.on_message(message)
@@ -97,6 +118,6 @@ class Juxta(discord.Client):
         for plugin in self.plugins:
             await plugin.on_guild_join(guild)
 
-    async def on_guild_leave(self, guild: discord.Guild):
+    async def on_guild_remove(self, guild: discord.Guild):
         for plugin in self.plugins:
-            await plugin.on_guild_leave(guild)
+            await plugin.on_guild_remove(guild)
