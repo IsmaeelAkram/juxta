@@ -2,7 +2,7 @@
 
 Juxta is a high-performance, easy-to-use Discord bot.
 
-## Planned features
+### Planned features
 - Server setup (guides you through the process of making a server)
 - Moderation
 - Fun
@@ -11,8 +11,9 @@ Juxta is a high-performance, easy-to-use Discord bot.
 - Money (maybe)
 - Streamer Role (when people go live)
 - Streamer Announcements
+- Personal Voice Channels
 
-## Juxta uses:
+### Juxta uses:
 - discord.py
 - Redis
 - flask
