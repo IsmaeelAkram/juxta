@@ -37,11 +37,15 @@ class Utility(Plugin):
             ),
         ]
 
-    async def ping(self, bot, args: list[str], message: discord.Message):
-        pong_message = random.choice(["Pong!", "Hey!", "Hello!"])
-        await message.channel.send(f"{message.author.mention} {pong_message}")
+    async def ping(self, client, args: list[str], message: discord.Message):
+        await message.channel.send(
+            embed=embed.Embed(
+                title="🏓 Pong!",
+                description=f"Server latency is **{round(client.latency)}ms**",
+            )
+        )
 
-    async def debuginfo(self, bot, args: list[str], message: discord.Message):
+    async def debuginfo(self, client, args: list[str], message: discord.Message):
         if message.author.id != 460117198795702272:
             raise PermissionError
         debug_info = embed.Embed(title="🖥 Debug Info")
@@ -53,7 +57,7 @@ class Utility(Plugin):
         await message.author.send(embed=debug_info)
         await message.add_reaction("✅")
 
-    async def help(self, bot, args: list[str], message: discord.Message):
+    async def help(self, client, args: list[str], message: discord.Message):
         help_embed = embed.Embed(
             title="Juxta Help",
             description="Juxta is a high-performance, easy-to-use Discord bot with an abundance of features. This help prompt is meant to be a guide on the commands Juxta has to offer, and how to use them.",
@@ -62,7 +66,7 @@ class Utility(Plugin):
         )
         await message.channel.send(embed=help_embed)
 
-        for plugin in bot.plugins:
+        for plugin in client.plugins:
             plugin_commands = ""
             for command in plugin.commands:
                 if command.usage == "":
@@ -70,7 +74,7 @@ class Utility(Plugin):
                 else:
                     usage = " " + command.usage
                 plugin_commands += (
-                    f"`{bot.PREFIX}{command.name}{usage}`\n{command.description}\n\n"
+                    f"`{client.PREFIX}{command.name}{usage}`\n{command.description}\n\n"
                 )
             await message.channel.send(
                 embed=embed.Embed(
@@ -80,5 +84,5 @@ class Utility(Plugin):
                 )
             )
 
-    async def commands(self, bot, args: list[str], message: discord.Message):
-        await self.help(bot, args, message)
+    async def commands(self, client, args: list[str], message: discord.Message):
+        await self.help(client, args, message)

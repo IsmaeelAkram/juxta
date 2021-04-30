@@ -30,11 +30,11 @@ class Moderation(Plugin):
             ),
         ]
 
-    async def kick(self, bot, args: list[str], message: discord.Message):
+    async def kick(self, client, args: list[str], message: discord.Message):
         self.redis.incr("juxta:kick_count")
 
-    async def ban(self, bot, args: list[str], message: discord.Message):
+    async def ban(self, client, args: list[str], message: discord.Message):
         self.redis.incr("juxta:ban_count")
 
-    async def warn(self, bot, args: list[str], message: discord.Message):
+    async def warn(self, client, args: list[str], message: discord.Message):
         self.redis.incr("juxta:warn_count")
