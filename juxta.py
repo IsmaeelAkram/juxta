@@ -23,9 +23,10 @@ class Juxta(discord.Client):
         self.loop.stop()
 
     # EVENTS
-    async def on_ready(self):
+    async def on_connect(self):
         log.good("Connected to Discord")
 
+    async def on_ready(self):
         self.REDIS_URL = os.getenv("REDIS_URL")
         self.PREFIX = os.getenv("PREFIX")
 
@@ -43,9 +44,9 @@ class Juxta(discord.Client):
         log.good("Juxta is ready")
 
     def register_plugins(self):
-        self.register_plugin(utility.Utility())
-        self.register_plugin(moderation.Moderation())
-        self.register_plugin(music.Music())
+        self.register_plugin(utility.Utility(self))
+        self.register_plugin(moderation.Moderation(self))
+        self.register_plugin(music.Music(self))
 
     def register_plugin(self, plugin: plugin.Plugin):
         log.info(f"Registered plugin '{plugin.name}'")
@@ -60,8 +61,6 @@ class Juxta(discord.Client):
                     return command
 
     async def on_message(self, message: discord.Message):
-        for plugin in self.plugins:
-            await plugin.on_message(message)
         if not message.content.startswith(self.PREFIX):
             return
 
@@ -91,3 +90,13 @@ class Juxta(discord.Client):
                     f"You're missing arguments!\nUsage: `{self.PREFIX}{command.name}{command_usage}`"
                 )
             )
+        for plugin in self.plugins:
+            await plugin.on_message(message)
+
+    async def on_guild_join(self, guild: discord.Guild):
+        for plugin in self.plugins:
+            await plugin.on_guild_join(guild)
+
+    async def on_guild_leave(self, guild: discord.Guild):
+        for plugin in self.plugins:
+            await plugin.on_guild_leave(guild)
