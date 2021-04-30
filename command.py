@@ -1,11 +1,6 @@
-import discord
-
-
 class Command:
-    def __init__(str, name: str, description: str, aliases: list[str]):
+    def __init__(self, *, name: str, description: str, usage: str, handler: bool):
         self.name = name
         self.description = description
-        self.aliases = aliases
-
-    async def handler(self, args: list[str], message: discord.Message):
-        pass
+        self.usage = usage
+        self.handler = handler
