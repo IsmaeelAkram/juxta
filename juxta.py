@@ -1,4 +1,5 @@
 from plugins import utility
+from utils import embed
 import plugin
 import discord
 import asyncio
@@ -11,7 +12,7 @@ import signal
 class Juxta(discord.Client):
     async def open_db(self):
         self.redis = await aioredis.create_redis_pool(self.REDIS_URL)
-        log.good("Opened Redis database")
+        log.good("Connected to Redis")
         return self.redis
 
     def stop(self):
@@ -23,7 +24,7 @@ class Juxta(discord.Client):
 
     # EVENTS
     async def on_ready(self):
-        log.good("Juxta connected to Discord")
+        log.good("Connected to Discord")
 
         self.REDIS_URL = os.getenv("REDIS_URL")
         self.PREFIX = os.getenv("PREFIX")
@@ -55,6 +56,8 @@ class Juxta(discord.Client):
                     return command
 
     async def on_message(self, message: discord.Message):
+        for plugin in self.plugins:
+            await plugin.on_message(message)
         if not message.content.startswith(self.PREFIX):
             return
         self.redis.incr("juxta:command_count")
@@ -63,4 +66,12 @@ class Juxta(discord.Client):
         command = await self.parse_command(args)
         if not command:
             return
-        await command.handler(self, args, message)
+
+        try:
+            await command.handler(self, args, message)
+        except PermissionError:
+            await message.channel.send(
+                embed=embed.SoftErrorEmbed(
+                    f"You don't have permission to run `{self.PREFIX}{command.name}`!"
+                )
+            )
