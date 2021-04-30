@@ -73,9 +73,21 @@ class Juxta(discord.Client):
 
         try:
             await command.handler(self, args, message)
-        except PermissionError:
+        except PermissionError as e:
+            log.warning(e)
             await message.channel.send(
                 embed=embed.SoftErrorEmbed(
                     f"You don't have permission to run `{self.PREFIX}{command.name}`!"
+                )
+            )
+        except TypeError as e:
+            log.warning(e)
+            if command.usage == "":
+                command_usage = command.usage
+            else:
+                command_usage = " " + command.usage
+            await message.channel.send(
+                embed=embed.SoftErrorEmbed(
+                    f"You're missing arguments!\nUsage: `{self.PREFIX}{command.name}{command_usage}`"
                 )
             )
