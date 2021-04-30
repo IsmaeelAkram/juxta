@@ -6,3 +6,4 @@ pychalk
 flask
 python-dotenv
 sentry-sdk
+discord-sentry-reporting
