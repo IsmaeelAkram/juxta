@@ -33,7 +33,7 @@ class Utility(Plugin):
                 name="commands",
                 description="Alias for !help",
                 usage="",
-                handler=self.commands,
+                handler=self.help,
             ),
         ]
 
@@ -83,6 +83,3 @@ class Utility(Plugin):
                     url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
                 )
             )
-
-    async def commands(self, client, args: list[str], message: discord.Message):
-        await self.help(client, args, message)
