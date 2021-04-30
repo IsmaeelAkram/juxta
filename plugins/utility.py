@@ -69,7 +69,9 @@ class Utility(Plugin):
                     usage = ""
                 else:
                     usage = " " + command.usage
-                plugin_commands += f"`{bot.PREFIX}{command.name}{usage}`\n**{command.description}**\n\n"
+                plugin_commands += (
+                    f"`{bot.PREFIX}{command.name}{usage}`\n{command.description}\n\n"
+                )
             await message.channel.send(
                 embed=embed.Embed(
                     title=plugin.name, description=plugin_commands
