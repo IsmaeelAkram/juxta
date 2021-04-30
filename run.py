@@ -6,6 +6,7 @@ from juxta import Juxta
 import os
 import log
 import sentry_sdk
+from sentry_sdk.integrations.redis import RedisIntegration
 
 sentry_sdk.init(
     os.getenv("SENTRY_URL"),
@@ -13,9 +14,9 @@ sentry_sdk.init(
     # of transactions for performance monitoring.
     # We recommend adjusting this value in production.
     traces_sample_rate=1.0,
+    integrations=[RedisIntegration()],
 )
 log.good("Connected to Sentry")
-
 
 token = os.getenv("TOKEN")
 bot = Juxta()
