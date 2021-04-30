@@ -5,4 +5,4 @@ requests
 pychalk
 flask
 python-dotenv
-colors.py
+sentry-sdk
