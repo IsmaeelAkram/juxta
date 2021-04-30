@@ -7,6 +7,6 @@ theme:
   palette:
     primary: pink
     accent: pink
-repo_url: https://github.com/IsmaeelAkram/juxta
-repo_name: IsmaeelAkram/juxta
-edit_uri: edit/docs/docs/
+# repo_url: https://github.com/IsmaeelAkram/juxta
+# repo_name: IsmaeelAkram/juxta
+# edit_uri: edit/docs/docs/
