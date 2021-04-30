@@ -1,4 +1,4 @@
-from plugins import utility, moderation
+from plugins import utility, moderation, music
 from utils import embed
 import plugin
 import discord
@@ -32,17 +32,20 @@ class Juxta(discord.Client):
         self.plugins = []
 
         await self.open_db()
+        self.register_plugins()
+        discord.opus.load_opus(os.getenv("OPUS_PATH"))
+        if discord.opus.is_loaded():
+            log.good("Opus loaded")
 
         self.loop.add_signal_handler(signal.SIGINT, lambda: self.stop())
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.stop())
-
-        self.register_plugins()
 
         log.good("Juxta is ready")
 
     def register_plugins(self):
         self.register_plugin(utility.Utility())
         self.register_plugin(moderation.Moderation())
+        self.register_plugin(music.Music())
 
     def register_plugin(self, plugin: plugin.Plugin):
         log.info(f"Registered plugin '{plugin.name}'")
