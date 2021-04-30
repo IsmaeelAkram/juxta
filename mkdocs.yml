@@ -1,1 +1,10 @@
-site_name: Juxta Docs
+site_name: Juxta Documentation
+theme:
+  logo: img/logo.png
+  name: material
+  palette:
+    primary: pink
+    accent: pink
+  
+extra_css:
+  - stylesheets/extra.css
