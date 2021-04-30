@@ -11,7 +11,8 @@ import log
 
 
 class Utility(Plugin):
-    def __init__(self):
+    def __init__(self, client: discord.Client):
+        self.client = client
         self.name = "Utility"
         self.description = "Utilitarian commands"
         self.commands = [
@@ -52,15 +53,15 @@ class Utility(Plugin):
             ),
         ]
 
-    async def ping(self, client, args: list[str], message: discord.Message):
+    async def ping(self, args: list[str], message: discord.Message):
         await message.channel.send(
             embed=embed.Embed(
                 title="🏓 Pong!",
-                description=f"Server latency is **{round(client.latency)}ms**",
+                description=f"Server latency is **{round(self.client.latency)}ms**",
             )
         )
 
-    async def debuginfo(self, client, args: list[str], message: discord.Message):
+    async def debuginfo(self, args: list[str], message: discord.Message):
         if message.author.id != 460117198795702272:
             raise PermissionError
         debug_info = embed.Embed(title="🖥 Debug Info")
@@ -72,24 +73,24 @@ class Utility(Plugin):
         await message.author.send(embed=debug_info)
         await message.add_reaction("✅")
 
-    async def stats(self, client, args: list[str], message: discord.Message):
+    async def stats(self, args: list[str], message: discord.Message):
         stats_embed = embed.Embed(title="📈 Stats")
 
-        command_count = await client.redis.get("juxta:command_count")
+        command_count = await self.client.redis.get("juxta:command_count")
         stats_embed.add_field(
             name="Commands Handled", value=command_count.decode("utf-8")
         )
-        kick_count = await client.redis.get("juxta:kick_count")
+        kick_count = await self.client.redis.get("juxta:kick_count")
         stats_embed.add_field(name="Users Kicked", value=kick_count.decode("utf-8"))
-        ban_count = await client.redis.get("juxta:ban_count")
+        ban_count = await self.client.redis.get("juxta:ban_count")
         stats_embed.add_field(name="Users Banned", value=ban_count.decode("utf-8"))
-        warn_count = await client.redis.get("juxta:warn_count")
+        warn_count = await self.client.redis.get("juxta:warn_count")
         stats_embed.add_field(name="Users Warned", value=kick_count.decode("utf-8"))
-        stats_embed.add_field(name="Servers Managing", value=len(client.guilds))
+        stats_embed.add_field(name="Servers Managing", value=len(self.client.guilds))
         await message.channel.send(embed=stats_embed)
         await message.add_reaction("👌")
 
-    async def help(self, client, args: list[str], message: discord.Message):
+    async def help(self, args: list[str], message: discord.Message):
         help_embed = embed.Embed(
             title="Juxta Help",
             description="Juxta is a high-performance, easy-to-use Discord bot with an abundance of features. This help prompt is meant to be a guide on the commands Juxta has to offer, and how to use them.",
@@ -98,7 +99,7 @@ class Utility(Plugin):
         )
         await message.channel.send(embed=help_embed)
 
-        for plugin in client.plugins:
+        for plugin in self.client.plugins:
             plugin_commands = ""
             for command in plugin.commands:
                 if command.hide_from_help == False:
@@ -106,7 +107,7 @@ class Utility(Plugin):
                         usage = ""
                     else:
                         usage = " " + command.usage
-                    plugin_commands += f"`{client.PREFIX}{command.name}{usage}`\n{command.description}\n\n"
+                    plugin_commands += f"`{self.client.PREFIX}{command.name}{usage}`\n{command.description}\n\n"
             await message.channel.send(
                 embed=embed.Embed(
                     title=plugin.name, description=plugin_commands
@@ -115,7 +116,7 @@ class Utility(Plugin):
                 )
             )
 
-    async def pin(self, client, args: list[str], message: discord.Message):
+    async def pin(self, args: list[str], message: discord.Message):
         if len(args) < 2:
             raise TypeError
             return

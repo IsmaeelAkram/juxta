@@ -7,7 +7,8 @@ import log
 
 
 class Music(Plugin):
-    def __init__(self):
+    def __init__(self, client: discord.Client):
+        self.client = client
         self.name = "Music"
         self.description = "Music commands"
         self.commands = [
@@ -49,17 +50,17 @@ class Music(Plugin):
             ),
         ]
 
-    async def summon(self, client, args: list[str], message: discord.Message):
+    async def summon(self, args: list[str], message: discord.Message):
         voice_channel = message.author.voice.channel
         await voice_channel.connect()
         await message.guild.change_voice_state(channel=voice_channel, self_deaf=True)
         await message.add_reaction("👌")
 
-    async def leave(self, client, args: list[str], message: discord.Message):
+    async def leave(self, args: list[str], message: discord.Message):
         await message.guild.voice_client.disconnect()
         await message.add_reaction("👌")
 
-    async def airhorn(self, client, args: list[str], message: discord.Message):
+    async def airhorn(self, args: list[str], message: discord.Message):
         isQuick = False
         try:
             voice_channel = message.author.voice.channel
