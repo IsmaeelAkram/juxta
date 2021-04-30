@@ -1,4 +1,4 @@
-from plugins import utility
+from plugins import utility, moderation
 from utils import embed
 import plugin
 import discord
@@ -42,6 +42,7 @@ class Juxta(discord.Client):
 
     def register_plugins(self):
         self.register_plugin(utility.Utility())
+        self.register_plugin(moderation.Moderation())
 
     def register_plugin(self, plugin: plugin.Plugin):
         log.info(f"Registered plugin '{plugin.name}'")
@@ -60,12 +61,12 @@ class Juxta(discord.Client):
             await plugin.on_message(message)
         if not message.content.startswith(self.PREFIX):
             return
-        self.redis.incr("juxta:command_count")
 
         args = message.content.split(" ")
         command = await self.parse_command(args)
         if not command:
             return
+        self.redis.incr("juxta:command_count")
 
         try:
             await command.handler(self, args, message)
