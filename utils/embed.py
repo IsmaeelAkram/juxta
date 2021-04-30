@@ -1,5 +1,6 @@
 import discord
 import colors
+import datetime
 
 
 def Embed(
@@ -9,6 +10,8 @@ def Embed(
     color=0xFCFCFC,
     footer="",
 ):
+    if footer == "":
+        footer = "Today at " + datetime.datetime.now().strftime("%I:%M %p")
     return discord.Embed(
         description=description, image=image, title=title, color=color
     ).set_footer(text=footer)
