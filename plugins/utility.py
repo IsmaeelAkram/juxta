@@ -8,6 +8,7 @@ import aioredis
 import os
 import sys
 import log
+import exceptions
 
 
 class Utility(Plugin):
@@ -118,7 +119,7 @@ class Utility(Plugin):
 
     async def pin(self, args: list[str], message: discord.Message):
         if len(args) < 2:
-            raise TypeError
+            raise exceptions.ArgsError
             return
 
         message_id = args[1]
