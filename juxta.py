@@ -46,12 +46,13 @@ class Juxta(discord.Client):
         self.loop.add_signal_handler(signal.SIGINT, lambda: self.stop())
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.stop())
 
-        await self.change_presence(
-            activity=discord.Activity(
-                name="bug reports", type=discord.ActivityType.listening
-            )
-        )
-        log.good("Presence set")
+        # await self.change_presence(
+        #     activity=discord.Activity(
+        #         name="bug reports", type=discord.ActivityType.listening
+        #     )
+        # )
+        # log.good("Presence set")
+
         log.good("Juxta is ready")
 
     def register_plugins(self):
