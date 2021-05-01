@@ -40,6 +40,12 @@ class Utility(Plugin):
                 usage="[message ID]",
                 handler=self.pin,
             ),
+            Command(
+                name="serverinfo",
+                description="Get server info",
+                usage="",
+                handler=self.serverinfo,
+            ),
         ]
 
     async def ping(self, args: list[str], message: discord.Message):
@@ -94,3 +100,22 @@ class Utility(Plugin):
                     "That message was not found! Right-click the message and press `Copy ID`."
                 )
             )
+
+    async def serverinfo(self, args: list[str], message: discord.Message):
+        server_info_embed = (
+            embed.Embed(title=message.guild.name)
+            .set_thumbnail(url=message.guild.icon_url)
+            .add_field(name="Server ID", value=message.guild.id)
+            .add_field(name="Owner", value=message.guild.owner.mention)
+            .add_field(name="Member Count", value=message.guild.member_count)
+            .add_field(name="Channel Count", value=len(message.guild.channels))
+            .add_field(name="Role Count", value=len(message.guild.roles))
+            .add_field(name="Created At", value=message.guild.created_at)
+            .add_field(name="Region", value=message.guild.region)
+            .add_field(
+                name="System Channel", value=message.guild.system_channel.mention
+            )
+            .add_field(name="Rules Channel", value=message.guild.rules_channel.mention)
+        )
+
+        await message.channel.send(message.author.mention, embed=server_info_embed)
