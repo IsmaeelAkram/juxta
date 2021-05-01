@@ -30,7 +30,6 @@ class Juxta(discord.Client):
 
     async def on_ready(self):
         self.REDIS_URL = os.getenv("REDIS_URL")
-        self.PREFIX = os.getenv("PREFIX")
         self.SENTRY_URL = os.getenv("SENTRY_URL")
 
         self.plugins = []
@@ -47,6 +46,12 @@ class Juxta(discord.Client):
         self.loop.add_signal_handler(signal.SIGINT, lambda: self.stop())
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.stop())
 
+        await self.change_presence(
+            activity=discord.Activity(
+                name="bug reports", type=discord.ActivityType.listening
+            )
+        )
+        log.good("Presence set")
         log.good("Juxta is ready")
 
     def register_plugins(self):
@@ -61,15 +66,13 @@ class Juxta(discord.Client):
         self.plugins.append(plugin)
 
     async def parse_command(self, args: list[str]):
-        cmd = args[0].replace(self.PREFIX, "")
-
         for plugin in self.plugins:
             for command in plugin.commands:
                 if cmd == command.name:
                     return command
 
     async def on_message(self, message: discord.Message):
-        if not message.content.startswith(self.PREFIX):
+        if not message.content.startswith("!"):
             return
 
         args = message.content.split(" ")
@@ -85,7 +88,7 @@ class Juxta(discord.Client):
             await message.channel.send(
                 message.author.mention,
                 embed=embed.SoftErrorEmbed(
-                    f"You don't have permission to run `{self.PREFIX}{command.name}`!"
+                    f"You don't have permission to run `{command.name}`!"
                 ),
             )
         except exceptions.ArgsError as e:
@@ -97,7 +100,7 @@ class Juxta(discord.Client):
             await message.channel.send(
                 message.author.mention,
                 embed=embed.SoftErrorEmbed(
-                    f"You're missing arguments!\nUsage: `{self.PREFIX}{command.name}{command_usage}`"
+                    f"You're missing arguments!\nUsage: `{command.name}{command_usage}`"
                 ),
             )
         except exceptions.NoVoiceChannelError as e:

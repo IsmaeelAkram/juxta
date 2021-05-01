@@ -11,7 +11,7 @@ class Welcome(Plugin):
         self.description = ""
         self.commands = [
             Command(
-                name="test-welcome-message",
+                name="!test-welcome-message",
                 description="Test welcome message that sends on guild join",
                 usage="",
                 handler=self.test_welcome_message,

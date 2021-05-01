@@ -13,37 +13,37 @@ class Music(Plugin):
         self.description = "Music commands"
         self.commands = [
             Command(
-                name="summon",
+                name="!summon",
                 description="Bring Juxta into your voice channel",
                 usage="",
                 handler=self.summon,
             ),
             Command(
-                name="join",
+                name="!join",
                 description="Alias of !summon",
                 usage="",
                 handler=self.summon,
             ),
             Command(
-                name="connect",
+                name="!connect",
                 description="Alias of !summon",
                 usage="",
                 handler=self.summon,
             ),
             Command(
-                name="leave",
+                name="!leave",
                 description="Remove Juxta from your voice channel",
                 usage="",
                 handler=self.leave,
             ),
             Command(
-                name="disconnect",
+                name="!disconnect",
                 description="Alias of !leave",
                 usage="",
                 handler=self.leave,
             ),
             Command(
-                name="airhorn",
+                name="!airhorn",
                 description="Plays an airhorn in your voice channel",
                 usage="",
                 handler=self.airhorn,
@@ -109,7 +109,7 @@ class Music(Plugin):
             source, after=lambda e: print(f"Player error: {e}") if e else None
         )
 
-        await message.add_reaction("📣")
+        await message.delete()
         if isQuick:
             await asyncio.sleep(3)
             await message.guild.voice_client.disconnect()

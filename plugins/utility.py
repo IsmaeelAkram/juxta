@@ -17,30 +17,33 @@ class Utility(Plugin):
         self.description = "Utilitarian commands"
         self.commands = [
             Command(
-                name="ping", description="Check bot status", usage="", handler=self.ping
+                name="!ping",
+                description="Check bot status",
+                usage="",
+                handler=self.ping,
             ),
             Command(
-                name="debuginfo",
+                name="!debuginfo",
                 description="Get debugging info (only for devs)",
                 usage="",
                 handler=self.debuginfo,
                 hide_from_help=True,
             ),
             Command(
-                name="stats",
+                name="!stats",
                 description="Get debugging info (only for devs)",
                 usage="",
                 handler=self.stats,
                 hide_from_help=True,
             ),
             Command(
-                name="pin",
+                name="!pin",
                 description="Pin message",
                 usage="[message ID]",
                 handler=self.pin,
             ),
             Command(
-                name="serverinfo",
+                name="!serverinfo",
                 description="Get server info",
                 usage="",
                 handler=self.serverinfo,

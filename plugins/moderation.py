@@ -11,19 +11,19 @@ class Moderation(Plugin):
         self.description = "Moderation commands"
         self.commands = [
             Command(
-                name="kick",
+                name="!kick",
                 description="Kick user",
                 usage="[user]",
                 handler=self.kick,
             ),
             Command(
-                name="ban",
+                name="!ban",
                 description="Ban user",
                 usage="[user]",
                 handler=self.ban,
             ),
             Command(
-                name="warn",
+                name="!warn",
                 description="Warn user",
                 usage="[user] (optional reason)",
                 handler=self.warn,
