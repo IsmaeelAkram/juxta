@@ -68,7 +68,7 @@ class Juxta(discord.Client):
     async def parse_command(self, args: list[str]):
         for plugin in self.plugins:
             for command in plugin.commands:
-                if cmd == command.name:
+                if args[0] == command.name:
                     return command
 
     async def on_message(self, message: discord.Message):
