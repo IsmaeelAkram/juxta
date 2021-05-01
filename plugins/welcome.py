@@ -13,4 +13,4 @@ class Welcome(Plugin):
         self.commands = []
 
     async def on_guild_join(self, guild: discord.Guild):
-        pass
+        self.client.redis.sadd("juxta:guilds", guild.id)

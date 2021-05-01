@@ -1,4 +1,4 @@
-from plugins import utility, moderation, music
+from plugins import utility, moderation, music, help, welcome
 from utils import embed
 from discord_sentry_reporting import use_sentry
 import plugin
@@ -51,6 +51,8 @@ class Juxta(discord.Client):
         self.register_plugin(utility.Utility(self))
         self.register_plugin(moderation.Moderation(self))
         self.register_plugin(music.Music(self))
+        self.register_plugin(help.Help(self))
+        self.register_plugin(welcome.Welcome(self))
 
     def register_plugin(self, plugin: plugin.Plugin):
         log.info(f"Registered plugin '{plugin.name}'")
