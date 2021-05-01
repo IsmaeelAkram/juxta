@@ -41,6 +41,8 @@ class Juxta(discord.Client):
         discord.opus.load_opus(os.getenv("OPUS_PATH"))
         if discord.opus.is_loaded():
             log.good("Opus loaded")
+        else:
+            raise discord.opus.OpusNotLoaded
 
         self.loop.add_signal_handler(signal.SIGINT, lambda: self.stop())
         self.loop.add_signal_handler(signal.SIGTERM, lambda: self.stop())

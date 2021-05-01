@@ -1,6 +1,7 @@
 discord.py[voice]
 asyncio
 aioredis
+redis
 requests
 pychalk
 flask
