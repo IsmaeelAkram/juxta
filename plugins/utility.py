@@ -35,18 +35,6 @@ class Utility(Plugin):
                 hide_from_help=True,
             ),
             Command(
-                name="help",
-                description="Shows all commands, descriptions, and usages",
-                usage="",
-                handler=self.help,
-            ),
-            Command(
-                name="commands",
-                description="Alias for !help",
-                usage="",
-                handler=self.help,
-            ),
-            Command(
                 name="pin",
                 description="Pin message",
                 usage="[message ID]",
@@ -90,32 +78,6 @@ class Utility(Plugin):
         stats_embed.add_field(name="Servers Managing", value=len(self.client.guilds))
         await message.channel.send(embed=stats_embed)
         await message.add_reaction("👌")
-
-    async def help(self, args: list[str], message: discord.Message):
-        help_embed = embed.Embed(
-            title="Juxta Help",
-            description="Juxta is a high-performance, easy-to-use Discord bot with an abundance of features. This help prompt is meant to be a guide on the commands Juxta has to offer, and how to use them.",
-        ).set_thumbnail(
-            url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
-        )
-        await message.channel.send(embed=help_embed)
-
-        for plugin in self.client.plugins:
-            plugin_commands = ""
-            for command in plugin.commands:
-                if command.hide_from_help == False:
-                    if command.usage == "":
-                        usage = ""
-                    else:
-                        usage = " " + command.usage
-                    plugin_commands += f"`{self.client.PREFIX}{command.name}{usage}`\n{command.description}\n\n"
-            await message.channel.send(
-                embed=embed.Embed(
-                    title=plugin.name, description=plugin_commands
-                ).set_thumbnail(
-                    url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
-                )
-            )
 
     async def pin(self, args: list[str], message: discord.Message):
         if len(args) < 2:
