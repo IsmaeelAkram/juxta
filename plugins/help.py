@@ -22,6 +22,7 @@ class Help(Plugin):
                 handler=self.help,
             ),
         ]
+        self.hide_from_help = True
 
     async def help(self, args: list[str], message: discord.Message):
         if len(args) <= 1:
