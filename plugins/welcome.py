@@ -6,8 +6,7 @@ import log
 
 
 class Welcome(Plugin):
-    def __init__(self, client: discord.Client):
-        self.client = client
+    def init(self):
         self.name = "Welcome"
         self.description = ""
         self.commands = [

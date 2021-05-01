@@ -8,8 +8,7 @@ import exceptions
 
 
 class Music(Plugin):
-    def __init__(self, client: discord.Client):
-        self.client = client
+    def init(self):
         self.name = "Music"
         self.description = "Music commands"
         self.commands = [

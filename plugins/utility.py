@@ -12,8 +12,7 @@ import exceptions
 
 
 class Utility(Plugin):
-    def __init__(self, client: discord.Client):
-        self.client = client
+    def init(self):
         self.name = "Utility"
         self.description = "Utilitarian commands"
         self.commands = [

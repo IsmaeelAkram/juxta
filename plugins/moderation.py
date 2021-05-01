@@ -6,8 +6,7 @@ import log
 
 
 class Moderation(Plugin):
-    def __init__(self, client: discord.Client):
-        self.client = client
+    def init(self):
         self.name = "Moderation"
         self.description = "Moderation commands"
         self.commands = [

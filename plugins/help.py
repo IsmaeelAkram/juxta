@@ -5,8 +5,7 @@ import discord
 
 
 class Help(Plugin):
-    def __init__(self, client: discord.Client):
-        self.client = client
+    def init(self):
         self.name = "Help"
         self.description = "List of commands"
         self.commands = [
@@ -35,19 +34,20 @@ class Help(Plugin):
 
         # TODO: Hide plugin if has attribute 'hide_from_help'
         for plugin in self.client.plugins:
-            plugin_commands = ""
-            for command in plugin.commands:
-                if command.hide_from_help == False:
-                    if command.usage == "":
-                        usage = ""
-                    else:
-                        usage = " " + command.usage
-                    plugin_commands += f"`{self.client.PREFIX}{command.name}{usage}`\n{command.description}\n\n"
-            await message.author.send(
-                embed=embed.Embed(
-                    title=plugin.name, description=plugin_commands
-                ).set_thumbnail(
-                    url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
+            if not plugin.hide_from_help:
+                plugin_commands = ""
+                for command in plugin.commands:
+                    if command.hide_from_help == False:
+                        if command.usage == "":
+                            usage = ""
+                        else:
+                            usage = " " + command.usage
+                        plugin_commands += f"`{self.client.PREFIX}{command.name}{usage}`\n{command.description}\n\n"
+                await message.author.send(
+                    embed=embed.Embed(
+                        title=plugin.name, description=plugin_commands
+                    ).set_thumbnail(
+                        url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
+                    )
                 )
-            )
-            await message.add_reaction("✅")
+        await message.add_reaction("✅")

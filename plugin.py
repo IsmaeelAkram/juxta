@@ -8,6 +8,7 @@ class Plugin:
         self.description = ""
         self.commands = []
         self.hide_from_help = False
+        self.init()
 
     def init(self):
         pass
