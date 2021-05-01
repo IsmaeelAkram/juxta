@@ -6,6 +6,7 @@ from juxta import Juxta
 import os
 import log
 import sentry_sdk
+import discord
 from sentry_sdk.integrations.redis import RedisIntegration
 
 sentry_sdk.init(
@@ -19,5 +20,5 @@ sentry_sdk.init(
 log.good("Connected to Sentry")
 
 token = os.getenv("TOKEN")
-bot = Juxta()
+bot = Juxta(intents=discord.Intents.all())
 bot.run(token)
