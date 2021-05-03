@@ -2,7 +2,7 @@ import aioredis
 import discord
 from command import Command
 from plugin import Plugin
-from utils import embed
+import embed
 import log
 
 

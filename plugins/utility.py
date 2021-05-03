@@ -1,6 +1,6 @@
 from plugin import Plugin
 from command import Command
-from utils import embed
+import embed
 import discord
 import random
 import requests

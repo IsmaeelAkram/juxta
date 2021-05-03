@@ -1,5 +1,5 @@
 from plugins import utility, moderation, music, help, welcome
-from utils import embed
+import embed
 from discord_sentry_reporting import use_sentry
 import plugin
 import discord
