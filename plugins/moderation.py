@@ -8,6 +8,7 @@ import log
 class Moderation(Plugin):
     def init(self):
         self.name = "Moderation"
+        self.slug = "moderation"
         self.description = "Moderation commands"
         self.commands = [
             Command(

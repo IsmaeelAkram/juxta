@@ -5,6 +5,7 @@ class Plugin:
     def __init__(self, client: discord.Client):
         self.client = client
         self.name = ""
+        self.slug = ""
         self.description = ""
         self.commands = []
         self.hide_from_help = False

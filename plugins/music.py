@@ -10,6 +10,7 @@ import exceptions
 class Music(Plugin):
     def init(self):
         self.name = "Music"
+        self.slug = "music"
         self.description = "Music commands"
         self.commands = [
             Command(

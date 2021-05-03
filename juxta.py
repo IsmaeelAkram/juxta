@@ -9,6 +9,7 @@ import os
 import log
 import signal
 import exceptions
+import storage
 
 
 class Juxta(discord.Client):
@@ -70,55 +71,58 @@ class Juxta(discord.Client):
         for plugin in self.plugins:
             for command in plugin.commands:
                 if args[0] == command.name:
-                    return command
+                    return (plugin, command)
+        return None
 
     async def on_message(self, message: discord.Message):
         if not message.content.startswith("!"):
             return
 
         args = message.content.split(" ")
-        command = await self.parse_command(args)
+        (plugin, command) = await self.parse_command(args)
         if not command:
             return
-        self.redis.incr("juxta:command_count")
 
-        try:
-            await command.handler(args, message)
-        except PermissionError as e:
-            log.warning(e)
-            await message.channel.send(
-                message.author.mention,
-                embed=embed.SoftErrorEmbed(
-                    f"You don't have permission to run `{command.name}`!"
-                ),
-            )
-        except exceptions.ArgsError as e:
-            log.warning(e)
-            if command.usage == "":
-                command_usage = command.usage
-            else:
-                command_usage = " " + command.usage
-            await message.channel.send(
-                message.author.mention,
-                embed=embed.SoftErrorEmbed(
-                    f"You're missing arguments!\nUsage: `{command.name}{command_usage}`"
-                ),
-            )
-        except exceptions.NoVoiceChannelError as e:
-            await message.channel.send(
-                message.author.mention,
-                embed=embed.SoftErrorEmbed(f"You're not in a voice channel!"),
-            )
-        except exceptions.AlreadyInVoiceChannelError as e:
-            await message.channel.send(
-                message.author.mention,
-                embed=embed.SoftErrorEmbed(f"I'm already in your voice channel!"),
-            )
-        except exceptions.BotNotInVoiceChannelError as e:
-            await message.channel.send(
-                message.author.mention,
-                embed=embed.SoftErrorEmbed(f"I'm not in a voice channel!"),
-            )
+        guild_storage = storage.GuildStorage(self, message.guild.id)
+        if await guild_storage.has_plugin(plugin):
+            self.redis.incr("juxta:command_count")
+            try:
+                await command.handler(args, message)
+            except PermissionError as e:
+                log.warning(e)
+                await message.channel.send(
+                    message.author.mention,
+                    embed=embed.SoftErrorEmbed(
+                        f"You don't have permission to run `{command.name}`!"
+                    ),
+                )
+            except exceptions.ArgsError as e:
+                log.warning(e)
+                if command.usage == "":
+                    command_usage = command.usage
+                else:
+                    command_usage = " " + command.usage
+                await message.channel.send(
+                    message.author.mention,
+                    embed=embed.SoftErrorEmbed(
+                        f"You're missing arguments!\nUsage: `{command.name}{command_usage}`"
+                    ),
+                )
+            except exceptions.NoVoiceChannelError as e:
+                await message.channel.send(
+                    message.author.mention,
+                    embed=embed.SoftErrorEmbed(f"You're not in a voice channel!"),
+                )
+            except exceptions.AlreadyInVoiceChannelError as e:
+                await message.channel.send(
+                    message.author.mention,
+                    embed=embed.SoftErrorEmbed(f"I'm already in your voice channel!"),
+                )
+            except exceptions.BotNotInVoiceChannelError as e:
+                await message.channel.send(
+                    message.author.mention,
+                    embed=embed.SoftErrorEmbed(f"I'm not in a voice channel!"),
+                )
         for plugin in self.plugins:
             await plugin.on_message(message)
 

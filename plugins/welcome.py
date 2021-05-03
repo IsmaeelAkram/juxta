@@ -8,6 +8,7 @@ import log
 class Welcome(Plugin):
     def init(self):
         self.name = "Welcome"
+        self.slug = "welcome"
         self.description = ""
         self.commands = [
             Command(

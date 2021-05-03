@@ -7,6 +7,7 @@ import discord
 class Help(Plugin):
     def init(self):
         self.name = "Help"
+        self.slug = "help"
         self.description = "List of commands"
         self.commands = [
             Command(
@@ -39,7 +40,7 @@ class Help(Plugin):
             await message.author.send(embed=help_embed)
         else:
             for plugin in self.client.plugins:
-                if plugin.name.lower() == args[1].lower():
+                if plugin.slug == args[1].lower():
                     if not plugin.hide_from_help:
                         plugin_commands = ""
                         for command in plugin.commands:

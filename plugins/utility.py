@@ -14,6 +14,7 @@ import exceptions
 class Utility(Plugin):
     def init(self):
         self.name = "Utility"
+        self.slug = "utility"
         self.description = "Utilitarian commands"
         self.commands = [
             Command(
