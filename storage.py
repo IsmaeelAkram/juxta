@@ -28,8 +28,6 @@ class GuildStorage:
         return plugins
 
     async def has_plugin(self, plugin: Plugin):
-        if plugin.slug == "help":
-            return True
         if not await self.bot.redis.sismember(self.plugins_set, plugin.slug):
             return False
         else:
@@ -44,28 +42,18 @@ class GuildStorage:
         return False
 
     async def generate_main_help(self, guild_plugins: [Plugin]):
-        if len(guild_plugins) == 0:
-            help_embed = embed.Embed(
-                author="Juxta Plugins Help",
-                description="You don't have any plugins enabled!",
-                icon="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png",
-            ).set_thumbnail(
-                url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
-            )
-            return help_embed
-        else:
-            help_embed = embed.Embed(
-                author="Juxta Plugins Help",
-                icon="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png",
-            ).set_thumbnail(
-                url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
-            )
-            for plugin in guild_plugins:
-                if not plugin.hide_from_help:
-                    help_embed.add_field(
-                        name=plugin.name, value=f"`!help {plugin.name.lower()}`"
-                    )
-            return help_embed
+        help_embed = embed.Embed(
+            author="Juxta Plugins Help",
+            icon="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png",
+        ).set_thumbnail(
+            url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
+        )
+        for plugin in guild_plugins:
+            if not plugin.hide_from_help:
+                help_embed.add_field(
+                    name=plugin.name, value=f"`!help {plugin.name.lower()}`"
+                )
+        return help_embed
 
     async def generate_plugin_help(self, args: list[str], guild_plugins: [Plugin]):
         for plugin in guild_plugins:

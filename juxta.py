@@ -124,12 +124,22 @@ class Juxta(discord.Client):
                     embed=embed.SoftErrorEmbed(f"I'm not in a voice channel!"),
                 )
         for plugin in self.plugins:
-            await plugin.on_message(message)
+            if await guild_storage.has_plugin(plugin):
+                await plugin.on_message(message)
 
     async def on_guild_join(self, guild: discord.Guild):
+        self.redis.sadd("juxta:guilds", guild.id)
+        guild_storage = storage.GuildStorage(self, guild.id)
+        await guild_storage.add_plugin("welcome")
+        await guild_storage.add_plugin("help")
+
         for plugin in self.plugins:
-            await plugin.on_guild_join(guild)
+            if await guild_storage.has_plugin(plugin):
+                await plugin.on_guild_join(guild)
 
     async def on_guild_remove(self, guild: discord.Guild):
+        self.redis.srem("juxta:guilds", guild.id)
+        guild_storage = storage.GuildStorage(self, guild.id)
         for plugin in self.plugins:
-            await plugin.on_guild_remove(guild)
+            if await guild_storage.has_plugin(plugin):
+                await plugin.on_guild_remove(guild)

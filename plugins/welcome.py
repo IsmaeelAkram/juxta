@@ -24,11 +24,9 @@ class Welcome(Plugin):
     async def test_welcome_message(self, args: list[str], message: discord.Message):
         if message.author.id != 460117198795702272:
             return
-        await self.on_guild_join(message.guild, test=True)
+        await self.on_guild_join(message.guild)
 
-    async def on_guild_join(self, guild: discord.Guild, test=False):
-        if not test:
-            self.client.redis.sadd("juxta:guilds", guild.id)
+    async def on_guild_join(self, guild: discord.Guild):
         welcome_message = await self.client.redis.get("juxta:welcome-message")
         info_message = await self.client.redis.get("juxta:info-message")
         welcome_embed = (
@@ -40,4 +38,5 @@ class Welcome(Plugin):
         await guild.owner.send(embed=welcome_embed)
 
     async def on_guild_remove(self, guild: discord.Guild):
-        self.client.redis.srem("juxta:guilds", guild.id)
+        # TODO: Send bye message
+        pass
