@@ -14,7 +14,9 @@ import storage
 
 class Juxta(discord.Client):
     async def open_db(self):
-        self.redis = await aioredis.create_redis_pool(self.REDIS_URL)
+        self.redis = await aioredis.create_redis_pool(
+            self.REDIS_URL, password=self.REDIS_PASS
+        )
         log.good("Connected to Redis")
         return self.redis
 
@@ -30,6 +32,7 @@ class Juxta(discord.Client):
         log.good("Connected to Discord")
 
     async def on_ready(self):
+        self.REDIS_PASS = os.getenv("REDIS_PASS")
         self.REDIS_URL = os.getenv("REDIS_URL")
         self.SENTRY_URL = os.getenv("SENTRY_URL")
 
