@@ -1,4 +1,4 @@
-from plugins import utility, moderation, music, help, welcome
+from plugins import utility, moderation, music, help, welcome, logger
 import embed
 from discord_sentry_reporting import use_sentry
 import plugin
@@ -62,12 +62,13 @@ class Juxta(discord.Client):
         self.register_plugin(music.Music(self))
         self.register_plugin(help.Help(self))
         self.register_plugin(welcome.Welcome(self))
+        self.register_plugin(logger.Logger(self))
 
     def register_plugin(self, plugin: plugin.Plugin):
         log.info(f"Registered plugin '{plugin.name}'")
         self.plugins.append(plugin)
 
-    async def parse_command(self, args: list[str]):
+    async def parse_command(self, args: list):
         for plugin in self.plugins:
             for command in plugin.commands:
                 if args[0] == command.name:

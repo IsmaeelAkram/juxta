@@ -21,7 +21,7 @@ class Welcome(Plugin):
         ]
         self.hide_from_help = True
 
-    async def test_welcome_message(self, args: list[str], message: discord.Message):
+    async def test_welcome_message(self, args: list, message: discord.Message):
         if message.author.id != 460117198795702272:
             return
         await self.on_guild_join(message.guild)

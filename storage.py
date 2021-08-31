@@ -55,7 +55,7 @@ class GuildStorage:
                 )
         return help_embed
 
-    async def generate_plugin_help(self, args: list[str], guild_plugins: [Plugin]):
+    async def generate_plugin_help(self, args: list, guild_plugins: [Plugin]):
         for plugin in guild_plugins:
             if plugin.slug == args[1].lower():
                 if not plugin.hide_from_help:
@@ -75,3 +75,11 @@ class GuildStorage:
                     ).set_thumbnail(
                         url="https://raw.githubusercontent.com/IsmaeelAkram/juxta/master/art/Processor.png"
                     )
+
+    async def get_log_channel(self, guild_id: int, channel_id: int):
+        return await self.bot.redis.get(f"juxta:guilds:{guild_id}:log_channel")
+
+    async def set_log_channel(self, guild_id: int, channel_id: int):
+        return await self.bot.redis.set(
+            f"juxta:guilds:{guild_id}:log_channel", channel_id
+        )

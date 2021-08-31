@@ -51,7 +51,7 @@ class Utility(Plugin):
             ),
         ]
 
-    async def ping(self, args: list[str], message: discord.Message):
+    async def ping(self, args: list, message: discord.Message):
         await message.channel.send(
             embed=embed.Embed(
                 title="🏓 Pong!",
@@ -59,7 +59,7 @@ class Utility(Plugin):
             )
         )
 
-    async def debuginfo(self, args: list[str], message: discord.Message):
+    async def debuginfo(self, args: list, message: discord.Message):
         if message.author.id != 460117198795702272:
             raise PermissionError
         debug_info = embed.Embed(title="🖥 Debug Info")
@@ -71,7 +71,7 @@ class Utility(Plugin):
         await message.author.send(embed=debug_info)
         await message.add_reaction("✅")
 
-    async def stats(self, args: list[str], message: discord.Message):
+    async def stats(self, args: list, message: discord.Message):
         stats_embed = embed.Embed(title="📈 Stats")
 
         command_count = await self.client.redis.get("juxta:command_count")
@@ -88,7 +88,7 @@ class Utility(Plugin):
         await message.channel.send(embed=stats_embed)
         await message.add_reaction("👌")
 
-    async def pin(self, args: list[str], message: discord.Message):
+    async def pin(self, args: list, message: discord.Message):
         if len(args) < 2:
             raise exceptions.ArgsError
             return
@@ -104,7 +104,7 @@ class Utility(Plugin):
                 )
             )
 
-    async def serverinfo(self, args: list[str], message: discord.Message):
+    async def serverinfo(self, args: list, message: discord.Message):
         server_info_embed = (
             embed.Embed(title=message.guild.name)
             .set_thumbnail(url=message.guild.icon_url)

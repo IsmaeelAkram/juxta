@@ -51,7 +51,7 @@ class Music(Plugin):
             ),
         ]
 
-    async def summon(self, args: list[str], message: discord.Message, is_cmd=True):
+    async def summon(self, args: list, message: discord.Message, is_cmd=True):
         user_voice = message.author.voice
         if user_voice == None:
             raise exceptions.NoVoiceChannelError
@@ -73,7 +73,7 @@ class Music(Plugin):
         if is_cmd:
             await message.add_reaction("👌")
 
-    async def leave(self, args: list[str], message: discord.Message, is_cmd=True):
+    async def leave(self, args: list, message: discord.Message, is_cmd=True):
         if message.guild.voice_client == None:
             raise exceptions.BotNotInVoiceChannelError
             return
@@ -81,7 +81,7 @@ class Music(Plugin):
         if is_cmd:
             await message.add_reaction("👌")
 
-    async def airhorn(self, args: list[str], message: discord.Message):
+    async def airhorn(self, args: list, message: discord.Message):
         isQuick = False
 
         user_voice = message.author.voice

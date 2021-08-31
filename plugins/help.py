@@ -27,7 +27,7 @@ class Help(Plugin):
         ]
         self.hide_from_help = True
 
-    async def help(self, args: list[str], message: discord.Message):
+    async def help(self, args: list, message: discord.Message):
         guild_storage = storage.GuildStorage(self.client, message.guild.id)
         guild_plugins = await guild_storage.get_plugins()
         if len(args) <= 1:
