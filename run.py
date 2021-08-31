@@ -7,6 +7,8 @@ import os
 import log
 import sentry_sdk
 import discord
+import threading
+import server
 from sentry_sdk.integrations.redis import RedisIntegration
 
 sentry_sdk.init(
@@ -18,6 +20,9 @@ sentry_sdk.init(
     integrations=[RedisIntegration()],
 )
 log.good("Connected to Sentry")
+
+flask_thread = threading.Thread(target=server.run)
+flask_thread.start()
 
 token = os.getenv("TOKEN")
 bot = Juxta(intents=discord.Intents.all())
